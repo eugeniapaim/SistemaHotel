@@ -8,8 +8,6 @@ package sistemahotel;
  *
  * @author 2024020399
  */
-public enum TipoQuarto {
-    SIMPLES, LUXO, SUITE;
+public class HospedeDAO {
+    
 }
-
-

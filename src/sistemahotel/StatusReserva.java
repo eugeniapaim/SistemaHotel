@@ -8,6 +8,8 @@ package sistemahotel;
  *
  * @author 2024020399
  */
-public class StatusReserva {
-    
+
+public enum StatusReserva {
+    PENDENTE, CONFIRMADA, CANCELADA;
 }
+

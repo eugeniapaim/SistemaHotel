@@ -8,6 +8,26 @@ package sistemahotel;
  *
  * @author 2024020399
  */
-public class Hospede {
-    
+public class Hospede extends Pessoa{
+    private int numeroDeReservas;
+
+    public Hospede(String nome, String cpf, String email, int numeroDeReservas) {
+        super(nome, cpf, email);
+        this.numeroDeReservas = numeroDeReservas;
+    }
+
+    @Override
+    public void exibirInformacoes() {
+        System.out.println("Hóspede: " + getNome() + ", CPF: " + getCpf() + ", Email: " + getEmail());
+    }
+
+    public int getNumeroDeReservas() {
+        return numeroDeReservas;
+    }
+
+    public void setNumeroDeReservas(int numeroDeReservas) {
+        this.numeroDeReservas = numeroDeReservas;
+    }
 }
+
+

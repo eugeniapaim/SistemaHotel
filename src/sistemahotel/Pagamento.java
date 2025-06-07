@@ -9,5 +9,15 @@ package sistemahotel;
  * @author 2024020399
  */
 public class Pagamento {
-    
+    private Reserva reserva;
+
+    public Pagamento(Reserva reserva) {
+        this.reserva = reserva;
+    }
+
+    public void processarPagamento(double valor) {
+        System.out.println("Pagamento de R$ " + valor + " realizado para a reserva " + reserva.getNumeroReserva());
+    }
 }
+
+
