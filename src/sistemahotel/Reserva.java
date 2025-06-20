@@ -4,13 +4,12 @@
  */
 package sistemahotel;
 import java.util.HashMap;
-import java.util.Map;
 /**
  *
  * @author 2024020399
  */
 public class Reserva {
-    private static final Map<Integer, Reserva> reservas = new HashMap<>();
+    private static final HashMap<Integer, Reserva> reservas = new HashMap<>();
     private int numeroReserva;
     private Quarto quarto;
     private Hospede hospede;
@@ -28,11 +27,55 @@ public class Reserva {
         reservas.put(numeroReserva, this);
     }
 
+    public static HashMap<Integer, Reserva> getReservas() {
+        return reservas;
+    }
+
+    public Quarto getQuarto() {
+        return quarto;
+    }
+
+    public Hospede getHospede() {
+        return hospede;
+    }
+
+    public int getDias() {
+        return dias;
+    }
+
+    public Pagamento getPagamento() {
+        return pagamento;
+    }
+
+    public void setNumeroReserva(int numeroReserva) {
+        this.numeroReserva = numeroReserva;
+    }
+
+    public void setQuarto(Quarto quarto) {
+        this.quarto = quarto;
+    }
+
+    public void setHospede(Hospede hospede) {
+        this.hospede = hospede;
+    }
+
+    public void setStatus(StatusReserva status) {
+        this.status = status;
+    }
+
+    public void setDias(int dias) {
+        this.dias = dias;
+    }
+
+    public void setPagamento(Pagamento pagamento) {
+        this.pagamento = pagamento;
+    }
+    
     public double calcularPrecoTotal() {
         return quarto.calcularPrecoTotal(dias);
     }
 
-    public void confirmarReserva() {
+    public void confirmarReserva() throws QuartoIndisponivelException {
         if (quarto.isOcupado()) {
             throw new QuartoIndisponivelException("Quarto já ocupado.");
         }
@@ -58,6 +101,12 @@ public class Reserva {
     }
     public class ReservaInvalidaException extends Exception {
         public ReservaInvalidaException(String message) {
+            super(message);
+        }
+    }
+    
+    public class QuartoIndisponivelException extends Exception {
+        public QuartoIndisponivelException(String message) {
             super(message);
         }
     }

@@ -1,13 +1,33 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package sistemahotel;
 
-/**
- *
- * @author 2024020399
- */
-public class FuncionarioDAO {
-    
+import java.util.HashMap;
+import java.util.Map;
+
+public class FuncionarioDAO implements OperacoesDAO<Funcionario> {
+    private final Map<String, Funcionario> funcionarios = new HashMap<>();
+
+    @Override
+    public void inserir(Funcionario f) {
+        funcionarios.put(f.getCpf(), f);
+    }
+
+    @Override
+    public boolean excluir(Funcionario f) {
+        return funcionarios.remove(f.getCpf()) != null;
+    }
+
+    @Override
+    public boolean pesquisar(Funcionario f) {
+        return funcionarios.containsKey(f.getCpf());
+    }
+
+    @Override
+    public Funcionario buscar(Funcionario f) {
+        return funcionarios.get(f.getCpf());
+    }
+
+    // Método extra (opcional): buscar por CPF diretamente
+    public Funcionario buscarPorCpf(String cpf) {
+        return funcionarios.get(cpf);
+    }
 }
