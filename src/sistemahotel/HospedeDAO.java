@@ -1,13 +1,34 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package sistemahotel;
 
-/**
- *
- * @author 2024020399
- */
-public class HospedeDAO {
+import java.util.HashMap;
+
+public class HospedeDAO implements OperacoesDAO<Hospede> {
+    private final HashMap<String, Hospede> hospedes = new HashMap<>();
+
+    @Override
+    public void inserir(Hospede h) {
+        hospedes.put(h.getCpf(), h);
+    }
+
+    @Override
+    public boolean excluir(Hospede h) {
+        return hospedes.remove(h.getCpf()) != null;
+    }
+
+    @Override
+    public boolean pesquisar(Hospede h) {
+        return hospedes.containsKey(h.getCpf());
+    }
+
+    @Override
+    public Hospede buscar(Hospede h) {
+        return hospedes.get(h.getCpf());
+    }
+
+    // Método extra opcional: buscar por CPF diretamente
+    public Hospede buscarPorCpf(String cpf) {
+        return hospedes.get(cpf);
+    }
+
     
 }
