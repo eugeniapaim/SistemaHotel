@@ -23,11 +23,11 @@ public class SistemaHotel {
         int opcaoMenuPrincipal;
 
         do {
-            System.out.println("Bem-vindo ao Sistema do Hotel");
+            System.out.println("Bem-vindo ao Sistema do Hotel".toUpperCase());
             System.out.println("1 - Sou Cliente");
-            System.out.println("2 - Sou Funcionário");
+            System.out.println("2 - Sou Funcionario");
             System.out.println("0 - Sair");
-            System.out.print("Escolha uma opção: ");
+            System.out.print("Escolha uma opcao: ");
             opcaoMenuPrincipal = Integer.parseInt(scanner.nextLine());
 
             switch (opcaoMenuPrincipal) {
@@ -41,7 +41,7 @@ public class SistemaHotel {
                     System.out.println("Saindo do sistema. Obrigado!");
                     break;
                 default:
-                    System.out.println("Opção inválida! Tente novamente.");
+                    System.out.println("Opcao invalida! Tente novamente.");
             }
         } while (opcaoMenuPrincipal != 0);
 
@@ -67,7 +67,7 @@ public class SistemaHotel {
                 System.out.println("1 - Fazer Check-in (Confirmar Reserva)");
                 System.out.println("2 - Ver Status da Reserva");
                 System.out.println("0 - Logout");
-                System.out.print("Escolha uma opção: ");
+                System.out.print("Escolha uma opcao: ");
                 opcaoCliente = Integer.parseInt(scanner.nextLine());
 
                 switch (opcaoCliente) {
@@ -81,11 +81,11 @@ public class SistemaHotel {
                         System.out.println("Logout realizado.\n");
                         break;
                     default:
-                        System.out.println("Opção inválida.");
+                        System.out.println("Opcao invalida.");
                 }
             } while (opcaoCliente != 0);
         } else {
-            System.out.println("Falha na autenticação. Email ou senha incorretos.\n");
+            System.out.println("Falha na autenticacao. Email ou senha incorretos.\n");
         }
     }
 
@@ -99,9 +99,13 @@ public class SistemaHotel {
 
     private static void fazerCheckIn(Hospede hospede) {
         System.out.println("\n=== Fazer Check-in ===");
-        System.out.print("Digite o número da reserva: ");
+        System.out.print("Digite o numero da reserva: ");
         int numeroReserva = Integer.parseInt(scanner.nextLine());
         Reserva reserva = Reserva.buscarReserva(numeroReserva);
+        if (reserva.getStatus() == StatusReserva.CANCELADA) {
+        System.out.println("Nao eh possivel fazer check-in em uma reserva CANCELADA.");
+        return;
+        }
 
         if (reserva != null && reserva.getHospede().equals(hospede)) {
             try {
@@ -111,7 +115,7 @@ public class SistemaHotel {
                 System.out.println("Erro: " + e.getMessage());
             }
         } else {
-            System.out.println("Reserva não encontrada para este hóspede.");
+            System.out.println("Reserva nao encontrada para este hospede.");
         }
     }
 
@@ -134,15 +138,15 @@ public class SistemaHotel {
     private static void menuFuncionario() {
         int opcaoFuncionario;
         do {
-            System.out.println("\n=== Menu Funcionário ===");
+            System.out.println("\n=== Menu Funcionario ===");
             System.out.println("1 - Cadastrar Cliente");
             System.out.println("2 - Fazer Reserva para Cliente");
-            System.out.println("3 - Cadastrar Funcionário");
+            System.out.println("3 - Cadastrar Funcionario");
             System.out.println("4 - Alterar Reserva do Cliente");
             System.out.println("5 - Cancelar Reserva");
             System.out.println("6 - Listar Reservas");
             System.out.println("0 - Logout");
-            System.out.print("Escolha uma opção: ");
+            System.out.print("Escolha uma opcao: ");
             opcaoFuncionario = Integer.parseInt(scanner.nextLine());
 
             switch (opcaoFuncionario) {
@@ -168,7 +172,7 @@ public class SistemaHotel {
                     System.out.println("Logout realizado.\n");
                     break;
                 default:
-                    System.out.println("Opção inválida.");
+                    System.out.println("Opcao invalida.");
             }
         } while (opcaoFuncionario != 0);
     }
@@ -199,6 +203,10 @@ public class SistemaHotel {
 
         System.out.print("Nome do cliente: ");
         String nomeCliente = scanner.nextLine();
+        
+        System.out.print("Quantos dias o cliente ficara hospedado? ");
+        int dias = scanner.nextInt();
+        scanner.nextLine();
 
         System.out.print("Email do cliente: ");
         String emailCliente = scanner.nextLine();
@@ -215,13 +223,13 @@ public class SistemaHotel {
         Quarto quarto = new Quarto(numQuarto, TipoQuarto.SIMPLES, 150);
 
         // Criar reserva com status pendente e 1 dia (exemplo)
-        Reserva reserva = new Reserva(numReserva, quarto, hospede, StatusReserva.PENDENTE, 1);
+        Reserva reserva = new Reserva(numReserva, quarto, hospede, StatusReserva.PENDENTE, dias);
 
         System.out.println("Reserva criada com sucesso para o cliente " + nomeCliente);
     }
-
+       
     private static void cadastrarFuncionario() {
-        System.out.println("\n=== Cadastro de Funcionário ===");
+        System.out.println("\n=== Cadastro de Funcionario ===");
         System.out.print("Nome: ");
         String nome = scanner.nextLine();
         System.out.print("CPF: ");
@@ -230,15 +238,17 @@ public class SistemaHotel {
         String email = scanner.nextLine();
         System.out.print("Cargo: ");
         String cargo = scanner.nextLine();
+        
+
 
         Funcionario funcionario = new Funcionario(nome, cpf, email, cargo);
-        System.out.println("Funcionário cadastrado com sucesso: " + funcionario.getNome());
+        System.out.println("Funcionario cadastrado com sucesso: " + funcionario.getNome());
         // Implementar armazenamento real conforme necessário
     }
 
     private static void alterarReserva() {
         System.out.println("\n=== Alterar Reserva ===");
-        System.out.print("Número da reserva: ");
+        System.out.print("Numero da reserva: ");
         int numReserva = Integer.parseInt(scanner.nextLine());
         Reserva reserva = Reserva.buscarReserva(numReserva);
 
@@ -274,11 +284,11 @@ public class SistemaHotel {
             for (Reserva r : Reserva.getReservas().values()) {
                 
                 System.out.println("Reserva #" + r.getNumeroReserva() +
-                        " - Hóspede: " + r.getHospede().getNome() +
-                        " - Quarto: " + r.getQuarto().getNumero() +
-                        " - Dias: " + r.getDias()+
-                        " - Status: " + r.getStatus()+
-                        " - Valor: " + r.calcularPrecoTotal());
+                        "\n - Hospede: " + r.getHospede().getNome() +
+                        "\n - Quarto: " + r.getQuarto().getNumero() +
+                        "\n - Dias: " + r.getDias()+
+                        "\n - Status: " + r.getStatus()+
+                        "\n - Valor: " + r.calcularPrecoTotal());
             }
         }
     }
