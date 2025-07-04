@@ -17,10 +17,22 @@ import java.util.Scanner;
 public class SistemaHotel {
     Random random = new Random();
     private static Scanner scanner = new Scanner(System.in);
-    private static HashMap<String, Hospede> hospedesCadastrados = new HashMap<>();
+    private static HospedeDAO hospedeDAO = new HospedeDAO();
+    
 
     public static void main(String[] args) {
-        int opcaoMenuPrincipal;
+    Hospede h1 = new Hospede("Maria Silva", "12345678900", "maria");
+    Hospede h2 = new Hospede("João Souza", "98765432100", "joao");
+    Hospede h3 = new Hospede("Ana Costa", "45678912300", "ana");
+    Hospede h4 = new Hospede("Carlos Lima", "78912345600", "carlos");
+    
+
+    hospedeDAO.inserir(h1);
+    hospedeDAO.inserir(h2);
+    hospedeDAO.inserir(h3);
+    hospedeDAO.inserir(h4);
+    
+    int opcaoMenuPrincipal;
 
         do {
             System.out.println("Bem-vindo ao Sistema do Hotel".toUpperCase());
@@ -55,8 +67,6 @@ public class SistemaHotel {
         System.out.print("Digite sua senha: ");
         String senha = scanner.nextLine();
 
-        // Autenticação simplificada: vamos buscar hóspede pelo email e validar senha
-        // Supondo que a senha seja o CPF do hóspede para exemplo (pode adaptar depois)
         Hospede hospede = autenticarHospede(email, senha);
 
         if (hospede != null) {
@@ -90,7 +100,7 @@ public class SistemaHotel {
     }
 
     private static Hospede autenticarHospede(String email, String senha) {
-        Hospede hospede = hospedesCadastrados.get(email.toLowerCase());
+        Hospede hospede = hospedeDAO.buscarPorEmail(email);
         if (hospede != null && hospede.getCpf().equals(senha)) {
             return hospede;
         }
@@ -141,10 +151,9 @@ public class SistemaHotel {
             System.out.println("\n=== Menu Funcionario ===");
             System.out.println("1 - Cadastrar Cliente");
             System.out.println("2 - Fazer Reserva para Cliente");
-            System.out.println("3 - Cadastrar Funcionario");
-            System.out.println("4 - Alterar Reserva do Cliente");
-            System.out.println("5 - Cancelar Reserva");
-            System.out.println("6 - Listar Reservas");
+            System.out.println("3 - Alterar Reserva do Cliente");
+            System.out.println("4 - Cancelar Reserva");
+            System.out.println("5 - Listar Reservas");
             System.out.println("0 - Logout");
             System.out.print("Escolha uma opcao: ");
             opcaoFuncionario = Integer.parseInt(scanner.nextLine());
@@ -157,15 +166,12 @@ public class SistemaHotel {
                     fazerReservaParaCliente();
                     break;
                 case 3:
-                    cadastrarFuncionario();
-                    break;
-                case 4:
                     alterarReserva();
                     break;
-                case 5:
+                case 4:
                     cancelarReserva();
                     break;
-                case 6:
+                case 5:
                     listarReservas();
                     break;
                 case 0:
@@ -185,48 +191,69 @@ public class SistemaHotel {
         String cpf = scanner.nextLine();
         System.out.print("Email: ");
         String email = scanner.nextLine();
-        int numReservas = (int) (Math.random() * 100);
-        System.out.println("O numero da sua reserva eh: "+numReservas);
 
-        Hospede hospede = new Hospede(nome, cpf, email, numReservas);
+        Hospede hospede = new Hospede(nome, cpf, email);
         // Armazena o hóspede no HashMap para autenticação futura
-        hospedesCadastrados.put(email.toLowerCase(), hospede);
+        hospedeDAO.inserir(hospede);
     }
 
     private static void fazerReservaParaCliente() {
-        System.out.println("\n=== Fazer Reserva para Cliente ===");
-        System.out.print("Numero da reserva: ");
-        int numReserva = Integer.parseInt(scanner.nextLine());
+    System.out.println("\n=== Fazer Reserva para Cliente ===");
 
-        System.out.print("Numero do quarto: ");
-        int numQuarto = Integer.parseInt(scanner.nextLine());
+    System.out.print("Numero da reserva: ");
+    int numReserva = Integer.parseInt(scanner.nextLine());
 
-        System.out.print("Nome do cliente: ");
-        String nomeCliente = scanner.nextLine();
-        
-        System.out.print("Quantos dias o cliente ficara hospedado? ");
-        int dias = scanner.nextInt();
-        scanner.nextLine();
+    System.out.print("Numero do quarto: ");
+    int numQuarto = Integer.parseInt(scanner.nextLine());
 
-        System.out.print("Email do cliente: ");
-        String emailCliente = scanner.nextLine();
+    System.out.println("Escolha o tipo de quarto:");
+    System.out.println("1 - Simples");
+    System.out.println("2 - Luxo");
+    System.out.println("3 - Suite");
+    System.out.print("Opcao: ");
+    int tipoEscolhido = Integer.parseInt(scanner.nextLine());
 
-        // Para simplificar, criando um hóspede novo (pode buscar um existente)
-        Hospede hospede = hospedesCadastrados.get(emailCliente.toLowerCase());
-        
-        if(hospede == null){
-            System.out.println("Cliente nao encontrado!");
-            return;
-        }
-
-        // Criar o quarto (deveria buscar um quarto existente em uma lista)
-        Quarto quarto = new Quarto(numQuarto, TipoQuarto.SIMPLES, 150);
-
-        // Criar reserva com status pendente e 1 dia (exemplo)
-        Reserva reserva = new Reserva(numReserva, quarto, hospede, StatusReserva.PENDENTE, dias);
-
-        System.out.println("Reserva criada com sucesso para o cliente " + nomeCliente);
+    TipoQuarto tipo;
+    double preco;
+    switch (tipoEscolhido) {
+        case 1:
+            tipo = TipoQuarto.SIMPLES;
+            preco = 100;
+            break;
+        case 2:
+            tipo = TipoQuarto.LUXO;
+            preco = 200;
+            break;
+        case 3:
+            tipo = TipoQuarto.SUITE;
+            preco = 300;
+            break;
+        default:
+            System.out.println("Opcao invalida. Tipo padrao SIMPLES selecionado.");
+            tipo = TipoQuarto.SIMPLES;
+            preco = 100;
     }
+
+    System.out.print("Quantos dias o cliente ficara hospedado? ");
+    int dias = Integer.parseInt(scanner.nextLine());
+
+    System.out.print("Email do cliente: ");
+    String emailCliente = scanner.nextLine();
+
+    Hospede hospede = hospedeDAO.buscarPorEmail(emailCliente);
+
+    if (hospede == null) {
+        System.out.println("Cliente nao encontrado!");
+        return;
+    }
+
+    Quarto quarto = new Quarto(numQuarto, tipo, preco);
+    Reserva reserva = new Reserva(numReserva, quarto, hospede, StatusReserva.PENDENTE, dias);
+    hospedeDAO.adicionarReserva(reserva);
+
+    System.out.println("Reserva criada com sucesso para " + hospede.getNome());
+    }
+
        
     private static void cadastrarFuncionario() {
         System.out.println("\n=== Cadastro de Funcionario ===");
@@ -243,7 +270,7 @@ public class SistemaHotel {
 
         Funcionario funcionario = new Funcionario(nome, cpf, email, cargo);
         System.out.println("Funcionario cadastrado com sucesso: " + funcionario.getNome());
-        // Implementar armazenamento real conforme necessário
+        
     }
 
     private static void alterarReserva() {
@@ -256,9 +283,33 @@ public class SistemaHotel {
             System.out.print("Novo número de dias: ");
             int dias = Integer.parseInt(scanner.nextLine());
             reserva.setDias(dias);
+            System.out.println("Escolha o tipo de quarto:");
+            System.out.println("1 - Simples");
+            System.out.println("2 - Luxo");
+            System.out.println("3 - Suite");
+            System.out.print("Opcao: ");
+            int tipoEscolhido = Integer.parseInt(scanner.nextLine());
+
+            TipoQuarto tipo;
+            double preco;
+            switch (tipoEscolhido) {
+                case 1:
+                    tipo = TipoQuarto.SIMPLES;
+                    break;
+                case 2:
+                    tipo = TipoQuarto.LUXO;
+                    break;
+                case 3:
+                    tipo = TipoQuarto.SUITE;
+                    break;
+                default:
+                    System.out.println("Opcao invalida. Tipo padrao SIMPLES selecionado.");
+                    tipo = TipoQuarto.SIMPLES;
+                
             System.out.println("Reserva alterada com sucesso.");
-        } else {
-            System.out.println("Reserva não encontrada.");
+            }
+        }else{
+            System.out.println("Reserva nao encontrada.");
         }
     }
 

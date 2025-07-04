@@ -11,9 +11,8 @@ package sistemahotel;
 public class Hospede extends Pessoa{
     private int numeroDeReservas;
 
-    public Hospede(String nome, String cpf, String email, int numeroDeReservas) {
+    public Hospede(String nome, String cpf, String email) {
         super(nome, cpf, email);
-        this.numeroDeReservas = numeroDeReservas;
     }
 
     @Override

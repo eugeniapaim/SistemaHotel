@@ -1,5 +1,6 @@
 package sistemahotel;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class HospedeDAO implements OperacoesDAO<Hospede> {
@@ -29,6 +30,23 @@ public class HospedeDAO implements OperacoesDAO<Hospede> {
     public Hospede buscarPorCpf(String cpf) {
         return hospedes.get(cpf);
     }
+    
+    public Hospede buscarPorEmail(String email) {
+    for (Hospede h : hospedes.values()) {
+        if (h.getEmail().equalsIgnoreCase(email)) {
+            return h;
+        }
+    }
+    return null;
+    }
+    
+    private ArrayList<Reserva> reservas = new ArrayList<>();
+
+    public void adicionarReserva(Reserva r) {
+        reservas.add(r);
+    }
+    
+    
 
     
 }

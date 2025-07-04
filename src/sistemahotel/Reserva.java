@@ -110,6 +110,13 @@ public class Reserva {
             super(message);
         }
     }
+    private static int proximoCodigoReserva = 1;
+
+    private static int gerarCodigoReserva() {
+    return proximoCodigoReserva++;
+}
+
+
 
 }
 
